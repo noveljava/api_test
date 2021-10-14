@@ -14,6 +14,14 @@ class Item:
     confirmed_editor: Optional[str] = None
     update_date: Optional[str] = None
 
+    def __eq__(self, other):
+        keys = ["price", "registrant", "reg_date", "fee", "confirmed_editor", "update_date"]
+        for key in keys:
+            if self.__dict__[key] != other.__dict__[key]:
+                return False
+
+        return True
+
 
 @dataclass(unsafe_hash=True)
 class ItemDescription:
