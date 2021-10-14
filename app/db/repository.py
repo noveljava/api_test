@@ -7,19 +7,17 @@ from datetime import datetime
 
 class AbstractRepository(abc.ABC):
     @abc.abstractmethod
-    def add(self, item: Item):
+    def insert(self, item: Item):
         raise NotImplementedError
 
 
 class SqlAlchemyRepository(AbstractRepository):
-    def __init__(self):
-        pass
+    def __init__(self, session):
+        self.session = session
 
-    def insert(self):
-        print("insert")
-
-    def get(self):
-        print("get")
+    def insert(self, obj):
+        self.session.add(obj)
+        self.session.commit()
 
     def update(self):
         print("update")

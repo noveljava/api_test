@@ -1,17 +1,21 @@
 import json
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, Depends
 from fastapi.responses import JSONResponse
 
 from .models.item import Item
+from ..core.itemManager import ItemManager
+from ..db.repository import SqlAlchemyRepository
+from ..db.session import get_session
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @router.post("/item")
-async def item(item: Item):
-    # TODO: Request 정보를 받아서 DB에 저장을 한다.
-    print(item)
-    return JSONResponse(status_code=status.HTTP_200_OK, content="OK")
+async def item(req_item: Item, session=Depends(get_session)):
+    db_handler = SqlAlchemyRepository(session)
+    idx = ItemManager(db_handler).insert(req_item, "Auth_User")
+    response = {"idx": idx}
+    return JSONResponse(status_code=status.HTTP_200_OK, content=response)
 
 
 @router.get("/item")
