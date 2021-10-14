@@ -18,10 +18,10 @@ app.include_router(auth.router)
 
 @app.on_event("startup")
 async def startup_event():
-    logger.add("./log/server_{time}.log", level="ERROR", rotation="500 MB")
     make_engine()
     start_mappers()
     make_all_table()
+    logger.add("./log/server_{time}.log", level="ERROR", rotation="500 MB")
 
 
 @app.on_event("shutdown")

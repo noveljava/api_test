@@ -9,7 +9,7 @@ SessionLocal: sessionmaker
 Base = declarative_base()
 
 
-def make_engine(sqlalchemy_database_url = None):
+def make_engine(sqlalchemy_database_url=None):
     global SessionLocal, engine, SQLALCHEMY_DATABASE_URL
     engine_url = SQLALCHEMY_DATABASE_URL
     if sqlalchemy_database_url is not None:

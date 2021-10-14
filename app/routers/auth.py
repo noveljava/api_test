@@ -5,6 +5,7 @@ from .models.item import Item, ItemChange
 from ..core.itemManager import ItemManager
 from ..db.repository import SqlAlchemyRepository
 from ..db.session import get_session
+from loguru import logger
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -12,9 +13,13 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 @router.post("/item")
 async def item(req_item: Item, session=Depends(get_session)):
     db_handler = SqlAlchemyRepository(session)
-    idx = ItemManager(db_handler).insert(req_item, "Auth_User")
-    response = {"idx": idx}
-    return JSONResponse(status_code=status.HTTP_200_OK, content=response)
+    try:
+        idx = ItemManager(db_handler).insert(req_item, "Auth_User")
+        response = {"idx": idx}
+        return JSONResponse(status_code=status.HTTP_200_OK, content=response)
+    except Exception as e:
+        logger.error(f"ERROR: Item 등록 중 에러가 발생했습니다.\n {e}")
+        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={"err_msg": "서버에 문제가 발생했습니다."})
 
 
 @router.get("/item")
