@@ -4,8 +4,8 @@ from typing import List
 
 from .languageInfo import Language
 from .languageInfo import Language
-from ..db.models.item import Item as ItemDBModel, ItemDescription as ItemDescriptionModel
-from ..routers.models.item import Item
+from ..db.models.item import Item as ItemDBModel, ItemDescription as ItemDescriptionModel, ItemChangeHistory as ItemChangeHistoryModel
+from ..routers.models.item import Item, ItemChange
 
 
 class ItemManager:
@@ -43,3 +43,16 @@ class ItemManager:
             result.append(e)
 
         return result
+
+    def update_item(self, idx: int, item_change: ItemChange, auth_name: str) -> int:
+        item_change_history: ItemChangeHistoryModel = ItemChangeHistoryModel(
+            item_idx=idx, registrant=auth_name, reg_date=datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+        )
+
+        item_change_history.assign(item_change)
+        self._db_handler.insert(item_change_history)
+
+        return item_change_history.idx
+
+    def get_change_history_items_by_idx(self, idx: int) -> List:
+        return [asdict(e) for e in self._db_handler.get_change_history_items_by_idx(idx)]

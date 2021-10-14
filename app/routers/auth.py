@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status, Depends
 from fastapi.responses import JSONResponse
 
-from .models.item import Item
+from .models.item import Item, ItemChange
 from ..core.itemManager import ItemManager
 from ..db.repository import SqlAlchemyRepository
 from ..db.session import get_session
@@ -27,7 +27,20 @@ async def item(idx: int = 0, session=Depends(get_session)):
 
 
 @router.put("/item/{idx}")
-async def item(idx: int):
+async def item(idx: int, item_change: ItemChange, session=Depends(get_session)):
     # TODO : idx에 대한 정보가 있는지 확인을 하고,
-    # 있다면 change history에 값을 집어넣는다.
-    return "OK"
+    db_handler = SqlAlchemyRepository(session)
+    item_manager = ItemManager(db_handler)
+    query_result = item_manager.get_items_by_idx(idx)
+    if len(query_result) == 0:
+        return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"err_msg": "해당 아이템을 찾을 수 없습니다."})
+
+    return item_manager.update_item(idx, item_change, "Auth_User")
+
+
+@router.get("/change-history/item/{idx}")
+async def item(idx: int = 0, session=Depends(get_session)):
+    db_handler = SqlAlchemyRepository(session)
+    query_result = ItemManager(db_handler).get_change_history_items_by_idx(idx)
+
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"items": query_result})

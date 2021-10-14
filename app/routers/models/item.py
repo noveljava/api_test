@@ -9,3 +9,11 @@ class Item(BaseModel):
 
     # Optional
     fee: Optional[int]
+
+
+class ItemChange(BaseModel):
+    # Optional
+    title: Optional[str]
+    content: Optional[str]
+    price: Optional[int]
+    fee: Optional[int]

@@ -9,3 +9,4 @@ python-dotenv
 loguru
 requests
 pytest-mock
+pydantic

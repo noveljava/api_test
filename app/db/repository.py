@@ -1,8 +1,6 @@
 import abc
-from typing import Dict
 
-from .models.item import Item, ItemDescription
-from datetime import datetime
+from .models.item import Item, ItemDescription, ItemChangeHistory
 
 
 class AbstractRepository(abc.ABC):
@@ -22,9 +20,16 @@ class SqlAlchemyRepository(AbstractRepository):
     def get_items_by_idx(self, idx: int):
         query = self.session.query(Item, ItemDescription).filter(Item.idx == ItemDescription.item_idx)
         if idx != 0:
-            query = query.filter(Item.idx==idx)
+            query = query.filter(Item.idx == idx)
 
         return query.all()
 
     def update(self):
         print("update")
+
+    def get_change_history_items_by_idx(self, idx: int):
+        query = self.session.query(ItemChangeHistory)
+        if idx != 0:
+            query = query.filter_by(item_idx=idx)
+
+        return query.all()
