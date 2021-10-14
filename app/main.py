@@ -1,8 +1,11 @@
 import uvicorn
 from fastapi import FastAPI
 from loguru import logger
+from sqlalchemy.orm import clear_mappers
 
 from .routers import auth
+from .db.orm import start_mappers
+from .db.session import make_engine, make_all_table
 
 app = FastAPI(
     title="API Test",
@@ -16,11 +19,14 @@ app.include_router(auth.router)
 @app.on_event("startup")
 async def startup_event():
     logger.add("./log/server_{time}.log", level="ERROR", rotation="500 MB")
+    make_engine()
+    start_mappers()
+    make_all_table()
 
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    print("Shutdown....!")
+    clear_mappers()
 
 
 def run():
