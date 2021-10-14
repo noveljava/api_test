@@ -1,4 +1,3 @@
-import json
 from fastapi import APIRouter, status, Depends
 from fastapi.responses import JSONResponse
 
@@ -20,11 +19,11 @@ async def item(req_item: Item, session=Depends(get_session)):
 
 @router.get("/item")
 @router.get("/item/{idx}")
-async def item(idx: int = 0):
-    # TODO : DB에 있는 친구를 가져와서 Return 시킨다.
-    # idx가 없을 경우에는 모든 정보를 가져온다.
+async def item(idx: int = 0, session=Depends(get_session)):
+    db_handler = SqlAlchemyRepository(session)
+    query_result = ItemManager(db_handler).get_items_by_idx(idx)
 
-    return f"OK - {idx}"
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"items": query_result})
 
 
 @router.put("/item/{idx}")
