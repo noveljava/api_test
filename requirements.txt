@@ -1,7 +1,7 @@
 fastapi
 uvicorn
-SQLAlchemy
-pytest
+SQLAlchemy == 1.4.22
+pytest == 6.2.4
 pyjwt
 jinja2
 aiohttp
