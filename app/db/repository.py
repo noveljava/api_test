@@ -19,7 +19,7 @@ class SqlAlchemyRepository(AbstractRepository):
 
     def get_items_by_idx(self, idx: int):
         query = self.session.query(Item, ItemDescription).filter(Item.idx == ItemDescription.item_idx)
-        if idx != 0:
+        if idx is not None:
             query = query.filter(Item.idx == idx)
 
         return query.all()
@@ -29,7 +29,7 @@ class SqlAlchemyRepository(AbstractRepository):
 
     def get_change_history_items_by_idx(self, idx: int):
         query = self.session.query(ItemChangeHistory)
-        if idx != 0:
+        if idx is not None:
             query = query.filter_by(item_idx=idx)
 
         return query.all()

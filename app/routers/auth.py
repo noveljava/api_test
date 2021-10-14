@@ -19,7 +19,7 @@ async def item(req_item: Item, session=Depends(get_session)):
 
 @router.get("/item")
 @router.get("/item/{idx}")
-async def item(idx: int = 0, session=Depends(get_session)):
+async def item(idx: int = None, session=Depends(get_session)):
     db_handler = SqlAlchemyRepository(session)
     query_result = ItemManager(db_handler).get_items_by_idx(idx)
 
@@ -39,7 +39,7 @@ async def item(idx: int, item_change: ItemChange, session=Depends(get_session)):
 
 
 @router.get("/change-history/item/{idx}")
-async def item(idx: int = 0, session=Depends(get_session)):
+async def item(idx: int = None, session=Depends(get_session)):
     db_handler = SqlAlchemyRepository(session)
     query_result = ItemManager(db_handler).get_change_history_items_by_idx(idx)
 
