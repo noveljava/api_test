@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+SQLAlchemy
+pytest
+pyjwt
+jinja2
+aiohttp
+python-dotenv
+loguru
+requests
+pytest-mock

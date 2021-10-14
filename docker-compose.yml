@@ -1,0 +1,12 @@
+# Use root/example as user/password credentials
+version: '3.1'
+services:
+  backend:
+    image: "python:3.8"
+    ports:
+      - "80:80"
+    working_dir: /backend
+    volumes:
+      - ./:/backend
+      - ./env_file:/backend/app/.env
+    command: bash -c "pip install -r requirements.txt && ./run.sh"
