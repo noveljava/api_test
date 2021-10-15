@@ -40,7 +40,8 @@ async def item(idx: int, item_change: ItemChange, session=Depends(get_session)):
     if len(query_result) == 0:
         return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"err_msg": "해당 아이템을 찾을 수 없습니다."})
 
-    return item_manager.update_item(idx, item_change, "Auth_User")
+    idx = item_manager.update_item(idx, item_change, "Auth_User")
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"idx": idx})
 
 
 @router.get("/change-history/item/{idx}")

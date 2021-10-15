@@ -33,3 +33,6 @@ class SqlAlchemyRepository(AbstractRepository):
             query = query.filter_by(item_idx=idx)
 
         return query.all()
+
+    def get_item_by_title(self, title: str):
+        return self.session.query(ItemDescription).filter_by(title=title).all()

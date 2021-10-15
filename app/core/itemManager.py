@@ -3,8 +3,8 @@ from datetime import datetime
 from typing import List
 
 from .languageInfo import Language
-from .languageInfo import Language
-from ..db.models.item import Item as ItemDBModel, ItemDescription as ItemDescriptionModel, ItemChangeHistory as ItemChangeHistoryModel
+from ..db.models.item import Item as ItemDBModel, ItemDescription as ItemDescriptionModel, \
+    ItemChangeHistory as ItemChangeHistoryModel
 from ..routers.models.item import Item, ItemChange
 
 
@@ -13,8 +13,8 @@ class ItemManager:
         self._db_handler = db_handler
 
     def insert(self, item: Item, auth_name: str) -> int:
-        # FIXME: 동일한 값의 이름이 있는지 확인을 한다.
-        # 동일한 값의 제목이 있다면 Insert하지 않고 Error를 처리한다.
+        if len(self._db_handler.get_item_by_title(item.title)) != 0:
+            raise Exception("제목이 중복이 됩니다.")
 
         item_db_model: ItemDBModel = ItemDBModel(
             price=item.price, registrant=auth_name, reg_date=datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")

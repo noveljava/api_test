@@ -2,6 +2,8 @@ import uvicorn
 from fastapi import FastAPI
 from loguru import logger
 from sqlalchemy.orm import clear_mappers
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import PlainTextResponse
 
 from .routers import auth
 from .db.orm import start_mappers
@@ -27,6 +29,12 @@ async def startup_event():
 @app.on_event("shutdown")
 async def shutdown_event():
     clear_mappers()
+
+
+# entity Error가 났을 시에 402로 처리되는 부분을 500 으로 고정.
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    return PlainTextResponse(str(exc), status_code=500)
 
 
 def run():
