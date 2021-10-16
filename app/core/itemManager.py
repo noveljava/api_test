@@ -112,7 +112,7 @@ class ItemManager:
 
             return json.loads(res.text)['message']['result']['translatedText'].split(__delimiter)
 
-        info: List = self.get_items_by_idx(idx)
+        info: List = self.get_items_by_idx(idx, wait="y")
         if len(info) == 0:
             raise Exception("해당 아이템을 찾을 수 없습니다.")
 

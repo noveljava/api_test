@@ -25,9 +25,9 @@ class SqlAlchemyRepository(AbstractRepository):
 
         if wait is not None:
             if wait == 'y':
-                query = query.filter(Item.confirmed_editor is not None)
+                query = query.filter(Item.confirmed_editor.__eq__(None))
             else:
-                query = query.filter(Item.confirmed_editor is None)
+                query = query.filter(Item.confirmed_editor.isnot(None))
 
         return query.all()
 
