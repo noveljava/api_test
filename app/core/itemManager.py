@@ -68,8 +68,8 @@ class ItemManager:
 
         return item_change_history.idx
 
-    def get_change_history_items_by_idx(self, idx: int, wait: str = None) -> List:
-        return [asdict(e) for e in self._db_handler.get_change_history_items_by_idx(idx, wait)]
+    def get_change_history_items_by_item_idx(self, idx: int, wait: str = None) -> List:
+        return [asdict(e) for e in self._db_handler.get_change_history_items_by_item_idx(idx, wait)]
 
     def update_item(self, idx: int, item: Item, editor_name: str):
         if not self._is_exist(idx):
@@ -134,9 +134,16 @@ class ItemManager:
 
         self._db_handler.update_item(idx, item_update_content)
 
+    def get_change_history_items_by_idx(self, idx: int, wait: str = None):
+        return self._db_handler.get_change_history_items_by_idx(idx, wait)
+
     def confirm_changed_history(self, idx: int, confirmed_name: str):
+        if 0 == len(self.get_change_history_items_by_idx(idx, wait="y")):
+            raise Exception("해당 아이템을 찾을 수 없습니다.")
+
         update_content = {
             'confirmed_editor': confirmed_name,
             'confirmed_date': get_current_time()
         }
+
         self._db_handler.update_item_change_history(idx, update_content)

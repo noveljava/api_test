@@ -39,10 +39,10 @@ class SqlAlchemyRepository(AbstractRepository):
         self.session.query(ItemDescription).filter_by(idx=idx).update(update_content)
         self.session.commit()
 
-    def get_change_history_items_by_idx(self, idx: int, wait: str = None):
+    def get_change_history_items_by_item_idx(self, item_idx: int, wait: str = None):
         query = self.session.query(ItemChangeHistory)
-        if idx is not None:
-            query = query.filter_by(item_idx=idx)
+        if item_idx is not None:
+            query = query.filter_by(item_idx=item_idx)
 
         if wait is not None:
             if wait == 'y':
@@ -58,3 +58,14 @@ class SqlAlchemyRepository(AbstractRepository):
     def update_item_change_history(self, idx: int, update_content: Dict):
         self.session.query(ItemChangeHistory).filter_by(idx=idx).update(update_content)
         self.session.commit()
+
+    def get_change_history_items_by_idx(self, idx: int, wait: str = None):
+        query = self.session.query(ItemChangeHistory).filter_by(idx=idx)
+
+        if wait is not None:
+            if wait == 'y':
+                query = query.filter(ItemChangeHistory.confirmed_editor.__eq__(None))
+            else:
+                query = query.filter(ItemChangeHistory.confirmed_editor.isnot(None))
+
+        return query.all()
