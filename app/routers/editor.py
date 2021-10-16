@@ -35,11 +35,18 @@ async def item(idx: int, session=Depends(get_session)):
     return JSONResponse(status_code=status.HTTP_200_OK, content={"idx": idx})
 
 
-@router.get("/change-request")
-@router.get("/change-request/{idx}")
+@router.get("/change-request/item/")
+@router.get("/change-request/item/{idx}")
 async def changed_request_item(idx: int = None, wait: str = None, session=Depends(get_session)):
     db_handler = SqlAlchemyRepository(session)
     query_result = ItemManager(db_handler).get_change_history_items_by_item_idx(idx, wait)
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"items": query_result})
+
+
+@router.get("/change-request/{idx}")
+async def changed_request_item(idx: int = None, wait: str = None, session=Depends(get_session)):
+    db_handler = SqlAlchemyRepository(session)
+    query_result = ItemManager(db_handler).get_change_history_items_by_idx(idx, wait)
     return JSONResponse(status_code=status.HTTP_200_OK, content={"items": query_result})
 
 

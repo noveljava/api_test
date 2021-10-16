@@ -113,7 +113,7 @@ class ItemManager:
             if res.status_code != 200:
                 return "Fail", "Fail"
 
-            return json.loads(res.text)['message']['result']['translatedText'].split(__delimiter)
+            return json.loads(res.text)['message']['result']['translatedText'].split(f"{__delimiter} ")
 
         info: List = self.get_items_by_idx(idx, wait="y")
         if len(info) == 0:
@@ -135,7 +135,7 @@ class ItemManager:
         self._db_handler.update_item(idx, item_update_content)
 
     def get_change_history_items_by_idx(self, idx: int, wait: str = None):
-        return self._db_handler.get_change_history_items_by_idx(idx, wait)
+        return [asdict(v) for v in self._db_handler.get_change_history_items_by_idx(idx, wait)]
 
     def confirm_changed_history(self, idx: int, confirmed_name: str):
         if 0 == len(self.get_change_history_items_by_idx(idx, wait="y")):

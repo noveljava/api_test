@@ -46,6 +46,6 @@ async def item(idx: int, item_change: ItemChange, session=Depends(get_session)):
 @router.get("/change-history/item/{idx}")
 async def item(idx: int = None, session=Depends(get_session)):
     db_handler = SqlAlchemyRepository(session)
-    query_result = ItemManager(db_handler).get_change_history_items_by_idx(idx)
+    query_result = ItemManager(db_handler).get_change_history_items_by_item_idx(idx)
 
     return JSONResponse(status_code=status.HTTP_200_OK, content={"items": query_result})
