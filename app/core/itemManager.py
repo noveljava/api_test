@@ -65,8 +65,8 @@ class ItemManager:
 
         return item_change_history.idx
 
-    def get_change_history_items_by_idx(self, idx: int) -> List:
-        return [asdict(e) for e in self._db_handler.get_change_history_items_by_idx(idx)]
+    def get_change_history_items_by_idx(self, idx: int, wait: str = None) -> List:
+        return [asdict(e) for e in self._db_handler.get_change_history_items_by_idx(idx, wait)]
 
     def update_item(self, idx: int, item: Item, editor_name: str):
         if not self._is_exist(idx):
