@@ -33,14 +33,13 @@ async def item(idx: int = None, session=Depends(get_session)):
 
 @router.put("/item/{idx}")
 async def item(idx: int, item_change: ItemChange, session=Depends(get_session)):
-    # TODO : idx에 대한 정보가 있는지 확인을 하고,
     db_handler = SqlAlchemyRepository(session)
-    item_manager = ItemManager(db_handler)
-    query_result = item_manager.get_items_by_idx(idx)
-    if len(query_result) == 0:
-        return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"err_msg": "해당 아이템을 찾을 수 없습니다."})
 
-    idx = item_manager.update_item(idx, item_change, "Auth_User")
+    try:
+        idx = ItemManager(db_handler).insert_change_history(idx, item_change, "Auth_User")
+    except Exception as e:
+        return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"err_msg": str(e)})
+
     return JSONResponse(status_code=status.HTTP_200_OK, content={"idx": idx})
 
 

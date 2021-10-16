@@ -14,6 +14,7 @@ item = Table(
     Column("registrant", String),
     Column("fee", Integer, default=None),
     Column("confirmed_editor", String, default=None),
+    Column("updater", String, default=None),
     Column("update_date", String, default=None),
     Column("reg_date", String)
 )

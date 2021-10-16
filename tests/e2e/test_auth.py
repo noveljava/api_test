@@ -6,6 +6,7 @@ import pytest
 from fastapi import status
 from datetime import datetime
 
+
 @pytest.fixture
 def params() -> Dict:
     return {
@@ -13,6 +14,7 @@ def params() -> Dict:
         "content": "내용",
         "price": 16000
     }
+
 
 def test_valid_register_item(app, params):
     result = app.post("/auth/item", json=params)
@@ -31,7 +33,7 @@ def make_expect_result(params, reg_time, idx):
     expected = {
         'price': params['price'], 'registrant': 'Auth_User', 'reg_date': reg_time, 'idx': idx,
         'fee': None,
-        'confirmed_editor': None, 'update_date': None,
+        'confirmed_editor': None, 'updater': None, 'update_date': None,
         'KO': {
             'item_idx': idx, 'language': 0, 'title': params['title'], 'content': params['content'], 'idx': idx
         }
