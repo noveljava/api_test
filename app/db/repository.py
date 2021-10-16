@@ -2,6 +2,7 @@ import abc
 
 from typing import Dict
 from .models.item import Item, ItemDescription, ItemChangeHistory
+from ..core.languageInfo import Language
 
 
 class AbstractRepository(abc.ABC):
@@ -18,7 +19,7 @@ class SqlAlchemyRepository(AbstractRepository):
         self.session.add(obj)
         self.session.commit()
 
-    def get_items_by_idx(self, idx: int, wait: str = None):
+    def get_items_by_idx(self, idx: int, wait: str = None, lang: str = None):
         query = self.session.query(Item, ItemDescription).filter(Item.idx == ItemDescription.item_idx)
         if idx is not None:
             query = query.filter(Item.idx == idx)
@@ -28,6 +29,10 @@ class SqlAlchemyRepository(AbstractRepository):
                 query = query.filter(Item.confirmed_editor.__eq__(None))
             else:
                 query = query.filter(Item.confirmed_editor.isnot(None))
+
+        if lang is not None:
+            lang = lang.upper()
+            query = query.filter(ItemDescription.language == Language[lang].value)
 
         return query.all()
 

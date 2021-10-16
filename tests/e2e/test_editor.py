@@ -1,8 +1,10 @@
+import json
+
 import pytest
 from fastapi import status
-import json
-from ..utils import make_expect_result, make_change_history_info
+
 from app.utils.utils import get_current_time
+from ..utils import make_expect_result, make_change_history_info
 
 
 @pytest.fixture

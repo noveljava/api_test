@@ -1,13 +1,10 @@
 from fastapi import APIRouter, status, Depends
 from fastapi.responses import JSONResponse
 
-from typing import Optional
-
-from .models.item import Item, ItemChange
+from .models.item import Item
 from ..core.itemManager import ItemManager
 from ..db.repository import SqlAlchemyRepository
 from ..db.session import get_session
-from loguru import logger
 
 router = APIRouter(prefix="/editor", tags=["editor"])
 

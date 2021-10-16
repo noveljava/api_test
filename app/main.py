@@ -5,7 +5,7 @@ from sqlalchemy.orm import clear_mappers
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import PlainTextResponse
 
-from .routers import auth, editor
+from .routers import auth, editor, customer
 from .db.orm import start_mappers
 from .db.session import make_engine, make_all_table
 
@@ -17,6 +17,7 @@ app = FastAPI(
 
 app.include_router(auth.router)
 app.include_router(editor.router)
+app.include_router(customer.router)
 
 
 @app.on_event("startup")

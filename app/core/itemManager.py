@@ -36,10 +36,10 @@ class ItemManager:
 
         return item_db_model.idx
 
-    def get_items_by_idx(self, idx: int, wait: str = None) -> List:
+    def get_items_by_idx(self, idx: int, wait: str = None, lang: str = None) -> List:
         result = []
         tmp_dict = {}
-        for e in self._db_handler.get_items_by_idx(idx, wait):
+        for e in self._db_handler.get_items_by_idx(idx, wait, lang):
             if e[0].idx not in tmp_dict.keys():
                 tmp_dict[e[0].idx] = asdict(e[0])
 
