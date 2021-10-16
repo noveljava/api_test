@@ -41,3 +41,10 @@ async def changed_request_item(idx: int = None, wait: str = None, session=Depend
     db_handler = SqlAlchemyRepository(session)
     query_result = ItemManager(db_handler).get_change_history_items_by_idx(idx, wait)
     return JSONResponse(status_code=status.HTTP_200_OK, content={"items": query_result})
+
+
+@router.put("/change-request/{idx}")
+async def changed_request_item(idx: int = None, session=Depends(get_session)):
+    db_handler = SqlAlchemyRepository(session)
+    query_result = ItemManager(db_handler).confirm_changed_history(idx, "Confirmed")
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"items": query_result})

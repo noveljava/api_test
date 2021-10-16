@@ -1,12 +1,15 @@
+import json
 from dataclasses import asdict
 from typing import List
-from ..utils.utils import get_current_time
+
+import requests
+
 from .languageInfo import Language
 from ..db.models.item import Item as ItemDBModel, ItemDescription as ItemDescriptionModel, \
     ItemChangeHistory as ItemChangeHistoryModel
 from ..routers.models.item import Item, ItemChange
-import requests
-import json
+from ..utils.utils import get_current_time
+
 
 class ItemManager:
     def __init__(self, db_handler):
@@ -91,7 +94,7 @@ class ItemManager:
         if len(item_description_update_content) != 0:
             self._db_handler.update_item_description(idx, item_description_update_content)
 
-    def confirmed(self, idx, confirmed_name):
+    def confirmed(self, idx: int, confirmed_name: str):
         def translate(title, content, translate_language) -> (str, str):
             __delimiter = "\nContent:"
             __url = "https://naveropenapi.apigw.ntruss.com/nmt/v1/translation"
@@ -130,3 +133,10 @@ class ItemManager:
             self._db_handler.insert(item_description_model)
 
         self._db_handler.update_item(idx, item_update_content)
+
+    def confirm_changed_history(self, idx: int, confirmed_name: str):
+        update_content = {
+            'confirmed_editor': confirmed_name,
+            'confirmed_date': get_current_time()
+        }
+        self._db_handler.update_item_change_history(idx, update_content)

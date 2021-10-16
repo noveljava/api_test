@@ -39,6 +39,7 @@ item_change_history = Table(
     Column("price", Integer, default=None),
     Column("fee", Integer, default=None),
     Column("confirmed_editor", String, default=None),
+    Column("confirmed_date", String, default=None),
     Column("registrant", String),
     Column("reg_date", String)
 )

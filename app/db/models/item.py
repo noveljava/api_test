@@ -48,6 +48,7 @@ class ItemChangeHistory:
     price: Optional[int] = None
     fee: Optional[int] = None
     confirmed_editor: Optional[str] = None
+    confirmed_date: Optional[str] = None
 
     def assign(self, other):
         keys = ['title', 'content', 'price']
