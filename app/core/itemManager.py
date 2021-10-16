@@ -5,7 +5,8 @@ from .languageInfo import Language
 from ..db.models.item import Item as ItemDBModel, ItemDescription as ItemDescriptionModel, \
     ItemChangeHistory as ItemChangeHistoryModel
 from ..routers.models.item import Item, ItemChange
-
+import requests
+import json
 
 class ItemManager:
     def __init__(self, db_handler):
@@ -89,3 +90,43 @@ class ItemManager:
         self._db_handler.update_item(idx, item_update_content)
         if len(item_description_update_content) != 0:
             self._db_handler.update_item_description(idx, item_description_update_content)
+
+    def confirmed(self, idx, confirmed_name):
+        def translate(title, content, translate_language) -> (str, str):
+            __delimiter = "\nContent:"
+            __url = "https://naveropenapi.apigw.ntruss.com/nmt/v1/translation"
+
+            header_infos = {
+                'X-NCP-APIGW-API-KEY-ID': 'jyg05ensko',
+                'X-NCP-APIGW-API-KEY': 'RJBSHQRezyWD7FtFk1RV8iLsiefSfoIuIQBHZGAM',
+            }
+            data_infos = {
+                'source': Language.KO.name.lower(),
+                'target': translate_language,
+                'text': f"{title}{__delimiter}{content}"
+            }
+
+            res = requests.post(__url, headers=header_infos, data=data_infos)
+            if res.status_code != 200:
+                return "Fail", "Fail"
+
+            return json.loads(res.text)['message']['result']['translatedText'].split(__delimiter)
+
+        info: List = self.get_items_by_idx(idx)
+        if len(info) == 0:
+            raise Exception("해당 아이템을 찾을 수 없습니다.")
+
+        item_update_content = {'confirmed_editor': confirmed_name, 'update_date': get_current_time()}
+
+        item_info = info[0][Language.KO.name]
+        for v in [Language.EN, Language.CH]:
+            language = v.name.lower() if v != Language.CH else 'zh-CN'
+
+            translated_title, translated_content = translate(item_info['title'], item_info['content'], language)
+            item_description_model: ItemDescriptionModel = ItemDescriptionModel(
+                item_idx=idx, title=translated_title, content=translated_content, language=v.value
+            )
+
+            self._db_handler.insert(item_description_model)
+
+        self._db_handler.update_item(idx, item_update_content)

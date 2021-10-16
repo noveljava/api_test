@@ -27,3 +27,9 @@ async def item(idx: int, item: Item, session=Depends(get_session)):
     ItemManager(db_handler).update_item(idx, item, "Editor")
     return JSONResponse(status_code=status.HTTP_200_OK, content={"idx": idx})
 
+
+@router.put("/item/confirmed/{idx}")
+async def item(idx: int, session=Depends(get_session)):
+    db_handler = SqlAlchemyRepository(session)
+    ItemManager(db_handler).confirmed(idx, "Editor")
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"idx": idx})
