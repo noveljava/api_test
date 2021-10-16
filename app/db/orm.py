@@ -14,6 +14,7 @@ item = Table(
     Column("registrant", String),
     Column("fee", Integer, default=None),
     Column("confirmed_editor", String, default=None),
+    Column("updater", String, default=None),
     Column("update_date", String, default=None),
     Column("reg_date", String)
 )
@@ -37,6 +38,8 @@ item_change_history = Table(
     Column("content", String, default=None),
     Column("price", Integer, default=None),
     Column("fee", Integer, default=None),
+    Column("confirmed_editor", String, default=None),
+    Column("confirmed_date", String, default=None),
     Column("registrant", String),
     Column("reg_date", String)
 )

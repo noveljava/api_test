@@ -12,6 +12,7 @@ class Item:
     idx: Optional[int] = None
     fee: Optional[int] = None
     confirmed_editor: Optional[str] = None
+    updater: Optional[str] = None
     update_date: Optional[str] = None
 
     def __eq__(self, other):
@@ -46,6 +47,8 @@ class ItemChangeHistory:
     content: Optional[str] = None
     price: Optional[int] = None
     fee: Optional[int] = None
+    confirmed_editor: Optional[str] = None
+    confirmed_date: Optional[str] = None
 
     def assign(self, other):
         keys = ['title', 'content', 'price']

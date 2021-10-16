@@ -3,9 +3,9 @@ from pydantic import BaseModel
 
 
 class Item(BaseModel):
-    title: str
-    content: str
-    price: int
+    title: Optional[str]
+    content: Optional[str]
+    price: Optional[int]
 
     # Optional
     fee: Optional[int]
